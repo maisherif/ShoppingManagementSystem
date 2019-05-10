@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import classes.Customer;
+import classes.WebPage;
+
 import javax.swing.JTextField;
 import java.io.*;
 import javax.swing.JButton;
@@ -69,38 +73,13 @@ public class Register extends JFrame {
 		btnRegister.setBackground(new Color(255, 255, 255));
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Customer c=new Customer(name.getText(),Mobile.getText(),password.getText(),username.getText());
-				String fileName = "Customers.txt";
-				 try {
-			            // Assume default encoding.
-			            FileWriter fileWriter =
-			                new FileWriter(fileName);
-
-			            // Always wrap FileWriter in BufferedWriter.
-			            BufferedWriter bufferedWriter =
-			                new BufferedWriter(fileWriter);
-
-			            // Note that write() does not automatically
-			            // append a newline character.
-			            bufferedWriter.write(name.getText());
-			            bufferedWriter.newLine();
-			            bufferedWriter.write(username.getText());
-			            bufferedWriter.newLine();
-			            bufferedWriter.write(password.getText());
-			            bufferedWriter.newLine();
-			            bufferedWriter.write(Mobile.getText());
-
-			            // Always close files.
-			            bufferedWriter.close();
-			        }
-			        catch(IOException ex) {
-			            System.out.println(
-			                "Error writing to file '"
-			                + fileName + "'");
-			            // Or we could just do this:
-			            // ex.printStackTrace();
-			        }
-			}
+                WebPage onlineshopping =new WebPage();
+                Customer customer=new Customer(name.getText(),Mobile.getText(),password.getText(),username.getText());
+                onlineshopping.register(customer);
+                
+                
+                
+		}
 		});
 		btnRegister.setBounds(271, 212, 119, 38);
 		contentPane.add(btnRegister);
@@ -118,7 +97,7 @@ public class Register extends JFrame {
 		lblUsername.setBounds(10, 81, 119, 38);
 		contentPane.add(lblUsername);
 		
-		JLabel lblRedister = new JLabel("Redister");
+		JLabel lblRedister = new JLabel("Register");
 		lblRedister.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		lblRedister.setForeground(new Color(255, 255, 255));
 		lblRedister.setBounds(161, 11, 96, 24);

@@ -2,6 +2,6 @@ package classes;
 
 public interface Observer {
 	
-    public abstract void update();
+    public abstract void update(Product p);
     
 }

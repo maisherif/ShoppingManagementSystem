@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import classes.Customer;
+import classes.Manager;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 
 public class Login extends JFrame {
 
@@ -74,62 +79,35 @@ public class Login extends JFrame {
 		contentPane.add(password);
 		password.setColumns(10);
 		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(101, 22, 200, 20);
+		comboBox.addItem("Customer");
+		comboBox.addItem("Manger");
+		contentPane.add(comboBox);
+		
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 // The name of the file to open.
-				//List<Customer> customers = new ArrayList<Customer>();
-		        String fileName = "Customers.txt";
-
-		        // This will reference one line at a time
-		        String line = null;
-                
-		        try {
-		            // FileReader reads text files in the default encoding.
-		            FileReader fileReader = 
-		                new FileReader(fileName);
-
-		            // Always wrap FileReader in BufferedReader.
-		            BufferedReader bufferedReader = 
-		                new BufferedReader(fileReader);
-		            int namee=0,passwordd=0;
-		            String n=username.getText().toString();
-		            String pass=password.getText().toString();
-		            while((line = bufferedReader.readLine()) != null) {
-		            	 System.out.println(line);
-		            	 System.out.println(username.getText().toString());
-		            	 String l=line;
-		                if(l==n)
-		                {
-		                	namee=1;
-		                }
-		                if(l==pass)
-		                {
-		                	passwordd=1;
-		                }
-		            }   
-		            System.out.println(namee);
-		            System.out.println(passwordd);
-                    if(namee==1&&passwordd==1)
+			
+				   if(comboBox.getSelectedItem()=="Customer")
+				   {
+                    Customer customer=new Customer();
+                    if(customer.login(username.getText(), password.getText())==true)
                     {
-                    	JOptionPane.showMessageDialog(null, username.getText());
+                    	new Cart().setVisible(true);
                     }
-		            // Always close files.
-		            bufferedReader.close();         
-		        }
-		        catch(FileNotFoundException ex) {
-		            System.out.println(
-		                "Unable to open file '" + 
-		                fileName + "'");                
-		        }
-		        catch(IOException ex) {
-		            System.out.println(
-		                "Error reading file '" 
-		                + fileName + "'");                  
-		            // Or we could just do this: 
-		            // ex.printStackTrace();
-		        }
-
+                    else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
+				   }
+				   else
+				   {
+					   Manager manger=new Manager();
+					   if(manger.login(username.getText(), password.getText())==true)
+	                    {
+						   JOptionPane.showMessageDialog(null,"Welcome");
+						   //Manger Form open
+	                    }
+					   else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
+				   }
 			}
 			
 		});
@@ -137,6 +115,14 @@ public class Login extends JFrame {
 		btnLogin.setForeground(new Color(70, 130, 180));
 		btnLogin.setBounds(280, 213, 115, 37);
 		contentPane.add(btnLogin);
+		
+		
+		
+		JLabel lblLoginAs = new JLabel("Login as");
+		lblLoginAs.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblLoginAs.setForeground(Color.WHITE);
+		lblLoginAs.setBackground(Color.WHITE);
+		lblLoginAs.setBounds(28, 14, 82, 33);
+		contentPane.add(lblLoginAs);
 	}
-
 }
