@@ -94,11 +94,12 @@ public class Product implements MenuComponent {
 		
 	}
 	
-	public void updateStock(Product product)
+	
+	public void updateStock(String productName, int Quantity)
 	{
-		
-		setQuantity(product.getQuantity() -1);
-		updateQuantity(product.getName(), this.getQuantity());
+		int oldQuantity = this.getQuantity();
+		setQuantity(oldQuantity + Quantity);
+		updateQuantity(productName, this.getQuantity());
 	}
 	
 	public void attach(Observer newObserver)
@@ -146,8 +147,14 @@ public class Product implements MenuComponent {
 		  Connection conn = DriverManager.getConnection(ConnectionURL, ConnectionUserName, ConnectionPassword);
 		  PreparedStatement preparedStatement = null;
 		  
-          String strQuery="DELETE FROM PRODUCT WHERE PRODUCTNAME = ?";
-
+          String strQuery="DELETE FROM BILLPRODUCT WHERE PRODUCTNAME = ?";
+          preparedStatement = conn.prepareStatement(strQuery);
+          preparedStatement.setObject(1, _productName);
+          preparedStatement.executeQuery();
+          
+          conn = DriverManager.getConnection(ConnectionURL, ConnectionUserName, ConnectionPassword);
+          preparedStatement = null;
+          strQuery= "DELETE FROM PRODUCT WHERE PRODUCTNAME = ?";
           preparedStatement = conn.prepareStatement(strQuery);
           preparedStatement.setObject(1, _productName);
          
@@ -159,6 +166,8 @@ public class Product implements MenuComponent {
 	      System.err.println(e.getMessage()); 
 	    } 
 	}
+	
+	
 	
 	public ArrayList<Product> selectProduct(String _categoryName)
 	{

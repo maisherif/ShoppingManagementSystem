@@ -22,12 +22,13 @@ import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import javax.swing.JPasswordField;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField username;
-	private JTextField password;
+	private JPasswordField password;
 
 	/**
 	 * Launch the application.
@@ -49,6 +50,7 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -56,73 +58,99 @@ public class Login extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblUserName = new JLabel("User Name:");
 		lblUserName.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblUserName.setForeground(new Color(255, 255, 255));
-		lblUserName.setBounds(28, 69, 98, 37);
+		lblUserName.setBounds(10, 101, 98, 37);
 		contentPane.add(lblUserName);
-		
+
 		username = new JTextField();
-		username.setBounds(151, 79, 96, 20);
+		username.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		username.setBounds(118, 109, 200, 20);
 		contentPane.add(username);
 		username.setColumns(10);
-		
+
 		JLabel lblPassword = new JLabel("Password:");
 		lblPassword.setForeground(new Color(255, 255, 255));
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblPassword.setBounds(31, 143, 95, 30);
+		lblPassword.setBounds(10, 149, 95, 30);
 		contentPane.add(lblPassword);
-		
-		password = new JTextField();
-		password.setBounds(151, 150, 96, 20);
-		contentPane.add(password);
-		password.setColumns(10);
-		
+
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(101, 22, 200, 20);
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		comboBox.setBounds(118, 66, 200, 20);
 		comboBox.addItem("Customer");
 		comboBox.addItem("Manger");
 		contentPane.add(comboBox);
-		
+
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				   if(comboBox.getSelectedItem()=="Customer")
-				   {
-                    Customer customer=new Customer();
-                    if(customer.login(username.getText(), password.getText())==true)
-                    {
-                    	new Cart().setVisible(true);
-                    }
-                    else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
-				   }
-				   else
-				   {
-					   Manager manger=new Manager();
-					   if(manger.login(username.getText(), password.getText())==true)
-	                    {
-						   JOptionPane.showMessageDialog(null,"Welcome");
-						   //Manger Form open
-	                    }
-					   else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
-				   }
+
+				if(comboBox.getSelectedItem().equals("Customer"))
+				{
+					Customer customer = new Customer().selectCustomer(username.getText());
+					if(customer.GetName().isEmpty() != true)
+					{
+						customer = new Customer(customer.GetName(), customer.GetMobile(), customer.GetPassword(), customer.GetUserName());
+						JOptionPane.showMessageDialog(null,"Welcome");
+						Main mainForm = new Main(customer);
+						mainForm.frame.setVisible(true);
+						Login.this.setVisible(false);
+					}
+					else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
+				}
+				else
+				{
+					Manager manger = new Manager(username.getText(), password.getText());
+					
+					if(manger.login(username.getText(), password.getText()))
+					{
+						JOptionPane.showMessageDialog(null,"Welcome");
+						new managerForm(manger).frmManagerForm.setVisible(true);
+						Login.this.setVisible(false);
+					}
+					else JOptionPane.showMessageDialog(null,"Wrong Username or Password");
+				}
 			}
-			
+
 		});
 		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnLogin.setForeground(new Color(70, 130, 180));
-		btnLogin.setBounds(280, 213, 115, 37);
+		btnLogin.setBounds(319, 223, 115, 37);
 		contentPane.add(btnLogin);
-		
-		
-		
-		JLabel lblLoginAs = new JLabel("Login as");
+
+
+
+		JLabel lblLoginAs = new JLabel("Login as:");
 		lblLoginAs.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblLoginAs.setForeground(Color.WHITE);
 		lblLoginAs.setBackground(Color.WHITE);
-		lblLoginAs.setBounds(28, 14, 82, 33);
+		lblLoginAs.setBounds(10, 60, 74, 33);
 		contentPane.add(lblLoginAs);
+
+		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Register().setVisible(true);
+			}
+		});
+		btnRegister.setForeground(new Color(70, 130, 180));
+		btnRegister.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnRegister.setBounds(194, 223, 115, 37);
+		contentPane.add(btnRegister);
+
+		JLabel lblLogin = new JLabel("Login");
+		lblLogin.setForeground(Color.WHITE);
+		lblLogin.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblLogin.setBackground(Color.WHITE);
+		lblLogin.setBounds(10, 11, 74, 33);
+		contentPane.add(lblLogin);
+		
+		password = new JPasswordField();
+		password.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		password.setBounds(118, 156, 200, 20);
+		contentPane.add(password);
 	}
 }

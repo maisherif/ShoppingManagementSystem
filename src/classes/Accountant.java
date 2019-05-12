@@ -29,7 +29,7 @@ public class Accountant
 		
 		for(int i = 0; i < _order.getProducts().size(); i++)
 		{
-			new Product().updateStock(_order.getProducts().get(i));
+			_order.getProducts().get(i).updateStock(_order.getProducts().get(i).getName(), -1);
 		}
 		
 		Bills.add(newBill);

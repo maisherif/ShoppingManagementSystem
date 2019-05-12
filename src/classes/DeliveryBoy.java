@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.sun.javafx.css.converters.StringConverter;
+//import com.sun.javafx.css.converters.StringConverter;
 
 public class DeliveryBoy {
 	
@@ -41,7 +41,7 @@ public class DeliveryBoy {
 		this.Mobile = _mobile;
 		this.Age = _age;
 		this.Orders = _Orders;
-		if(_Status == "A")
+		if(_Status.matches("A"))
 			this.BoyStatus = new Avalible();
 		else
 			this.BoyStatus = new Busy();
@@ -95,7 +95,7 @@ public class DeliveryBoy {
 	
 	public boolean canTakeOrder()
 	{
-		if(BoyStatus == new Busy())
+		if(BoyStatus.ToString().matches("Busy"))
 			return false;
 		else
 		{
@@ -146,11 +146,10 @@ public class DeliveryBoy {
 		  PreparedStatement preparedStatement = null;
 		  
           String strQuery="DELETE DELIVERYBOY WHERE BOYNAME = ?";
-
           preparedStatement = conn.prepareStatement(strQuery);
           preparedStatement.setObject(1, _boyName);
-          
           preparedStatement.executeQuery();
+          
 	    }
 	    catch (Exception e)
 	    {

@@ -10,10 +10,17 @@ public class Avalible implements Status
 	private String ConnectionUserName = "hr";
 	private String ConnectionPassword = "hr";
 	
+	
 	public Avalible()
 	{
 		
 	}
+	
+	public String ToString()
+	{
+		return "Avalible";
+	}
+	
 	public void updateStatus(String _boyName)
 	{
 		try

@@ -10,9 +10,14 @@ public class Busy implements Status
 	private String ConnectionUserName = "hr";
 	private String ConnectionPassword = "hr";
 	
+	
 	public Busy()
 	{
 		
+	}
+	public String ToString()
+	{
+		return "Busy";
 	}
 	
 	public void updateStatus(String _boyName)

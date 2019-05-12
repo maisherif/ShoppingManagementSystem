@@ -3,6 +3,7 @@ package classes;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class WebPage implements Observer 
@@ -17,9 +18,9 @@ public class WebPage implements Observer
 	{
 		allProducts = new Product().selectProduct();
 		allCategory = new Category().selectCategory();
-		allBills = new Bill().selectBill();
 		allBoys = new DeliveryBoy().selectDelivaryBoy();
 		accountant = new Accountant();
+		allBills = accountant.getBills();
 	}
 	
 	public void update(Product product)
@@ -100,11 +101,11 @@ public class WebPage implements Observer
 		boy.NewOrder(customerBill);
 		
 		
-		allProducts = new Product().selectProduct();
-		allBoys = new DeliveryBoy().selectDelivaryBoy();
-		allBills = new Bill().selectBill();
+		//allProducts = new Product().selectProduct();
+		//allBoys = new DeliveryBoy().selectDelivaryBoy();
+		//allBills = new Bill().selectBill();
+		//allBills.add(customerBill);
 		
-		allBills.add(customerBill);
 		return customerBill;
 	}
 	
@@ -120,6 +121,18 @@ public class WebPage implements Observer
 	public void addProduct(Product _product, String _categoryName) 
 	{
 		allProducts.add(_product);
+		MenuComponent category;
+		
+		for(int i = 0; i < allCategory.size(); i++)
+		{
+			if(allCategory.get(i).getName().matches(_categoryName))
+			{
+				category = allCategory.get(i);
+				allCategory.remove(i);
+				category.add(_product);
+				allCategory.add(category);
+			}
+		}
 		new Product().insertProduct(_product, _categoryName);
 	}
 	
@@ -138,11 +151,12 @@ public class WebPage implements Observer
 
 	public void RemoveProduct(String _productName)
 	{
+		
 		for(int i = 0; i < allProducts.size(); i++)
 		{
 			if(allProducts.get(i).getName().matches(_productName))
 			{
-				allProducts.remove(i);
+				allProducts.remove(allProducts.get(i));
 			}
 		}
 		new Product().deleteProduct(_productName);
@@ -150,24 +164,28 @@ public class WebPage implements Observer
 	
 	public void RemoveCategory(String _categoryName)
 	{
-		MenuComponent category = new Category();
+		int index = 0;
+		boolean exist = false;
 		
 		for(int i = 0; i < allCategory.size(); i++)
 		{
 			if( allCategory.get(i).getName().matches(_categoryName))
 			{
-				category = allCategory.get(i);
-				 allCategory.remove(i);
+				exist = true;
+				index = i;
 			}
 		}
 		
-		for(int i = 0; i < category.getProducts().size(); i++)
+		if(exist == true)
 		{
-			RemoveProduct(category.getProducts().get(i).getName());
+			for(int i = 0; i <  allCategory.get(index).getProducts().size(); i++)
+			{
+				RemoveProduct(allCategory.get(index).getProducts().get(i).getName());
+			}
+			
+			allCategory.remove(index);
+			new Category().deleteCategory(_categoryName);
 		}
-		
-		new Category().deleteCategory(_categoryName);
-		
 		
 	}
 	
@@ -177,7 +195,31 @@ public class WebPage implements Observer
 		return accountant.getBills();
 		
 	}
-
+	
+	public ArrayList<Bill> getCustomerBills(Customer cus)
+	{
+		ArrayList<Bill> customerBills = new ArrayList<Bill>();
+		for(int i = 0; i < allBills.size(); i++) {
+			if(allBills.get(i).getCustomer().GetName().equals(cus.GetName())) {
+				customerBills.add(allBills.get(i));
+			}
+		}
+		
+		return customerBills;
+	}
+	
+	public void updateQuantity(String _productName, int NewQuantity)
+	{
+		for(int i = 0; i < allProducts.size(); i++)
+		{
+			if(allProducts.get(i).getName().matches(_productName))
+			{
+				allProducts.get(i).updateStock(allProducts.get(i).getName(), NewQuantity);
+				break;
+			}
+		}
+		
+	}
 	public void addDelivayBoy(DeliveryBoy _boy)
 	{
 		allBoys.add(_boy);
@@ -207,6 +249,25 @@ public class WebPage implements Observer
 	public void register(Manager _manager)
 	{
 		new Manager().insertManager(_manager);
+	}
+	
+	public boolean returnBill(Bill bill)
+	{	
+		//if(LocalDate.parse(bill.getDate().toString()).getDayOfMonth() + 14 > LocalDate.now().getDayOfMonth())
+		//{
+			Order billOrder = bill.getOrder();
+			for(int i = 0; i < billOrder.getProducts().size(); i++)
+			{
+				String productName = billOrder.getProducts().get(i).getName();
+				int quantity = billOrder.getProducts().get(i).getQuantity();
+				
+				billOrder.getProducts().get(i).updateStock(productName, 1);
+			}
+			
+			bill.deleteBill(bill.getBillId());
+			return true;
+		//}
+		//return false;
 	}
 
 }

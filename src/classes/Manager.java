@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import com.sun.org.apache.regexp.internal.recompile;
+
 public class Manager
 {
 	private String ConnectionURL = "jdbc:oracle:thin:@localhost:1521:orcl";
@@ -22,6 +24,12 @@ public class Manager
 	public Manager() 
 	{
 		onlineShopping = new WebPage();
+	}
+	
+	public Manager(String username, String password) {
+		onlineShopping = new WebPage();
+		this.username = username;
+		this.password = password;
 	}
 	
 	public Manager(String Name,String Mobile,String password,String username)
@@ -111,7 +119,11 @@ public class Manager
 	{
 		return onlineShopping.getBills();
 	}
-
+	public void updateStock(String _productName, int NewQuantity)
+	{
+		onlineShopping.updateQuantity(_productName, NewQuantity);
+	}
+	
 	public void addDelivayBoy(DeliveryBoy _boy)
 	{
 		onlineShopping.addDelivayBoy(_boy);
@@ -130,8 +142,8 @@ public class Manager
 	
 	public boolean login(String _userName, String _password)
    	{
-   		boolean res = checkExist(_userName, _password);
-   		return res;
+		boolean res = checkExist(_userName, _password);
+		return res;
    	}
 	
 	public Manager selectManager(String _ManagerUserName)
